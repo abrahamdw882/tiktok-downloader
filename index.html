@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TikTok Video & Music Downloader</title>
+  <style>
+   
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #4caf50, #45a049);
+      color: #fff;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+    .container {
+      background: #fff;
+      color: #333;
+      max-width: 600px;
+      width: 100%;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+      text-align: center;
+      animation: fadeIn 0.6s ease-out;
+    }
+    h1 {
+      font-size: 24px;
+      margin-bottom: 10px;
+    }
+    p {
+      font-size: 16px;
+      margin-bottom: 20px;
+      color: #555;
+    }
+    input[type="text"] {
+      width: 100%;
+      padding: 12px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      outline: none;
+      margin-bottom: 20px;
+      transition: border-color 0.3s;
+    }
+    input[type="text"]:focus {
+      border-color: #4caf50;
+    }
+    button {
+      padding: 12px 20px;
+      background: #4caf50;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background 0.3s, transform 0.2s;
+    }
+    button:hover {
+      background: #45a049;
+      transform: scale(1.05);
+    }
+    .error {
+      color: red;
+      font-size: 14px;
+      margin-top: 10px;
+    }
+    .video-container {
+      margin-top: 20px;
+      display: none;
+    }
+    .video-container img {
+      width: 100%;
+      max-width: 300px; 
+      max-height: 200px; 
+      object-fit: cover; 
+      border-radius: 8px;
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+      margin-bottom: 15px;
+    }
+    .video-container h3 {
+      font-size: 18px;
+      margin-bottom: 10px;
+      color: #4caf50;
+      word-wrap: break-word; 
+    }
+    .video-container a {
+      display: inline-block;
+      text-decoration: none;
+      color: #fff;
+      background: #4caf50;
+      padding: 10px 15px;
+      border-radius: 8px;
+      margin-top: 10px;
+      font-size: 16px;
+      transition: background 0.3s, transform 0.2s;
+    }
+    .video-container a:hover {
+      background: #45a049;
+      transform: scale(1.05);
+    }
+    .stats {
+      margin-top: 20px;
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      color: #555;
+    }
+    .stats p {
+      flex: 1 1 48%;
+      margin-bottom: 10px;
+      font-size: 14px;
+    }
+    @media (max-width: 600px) {
+      .video-container img {
+        max-width: 100%; 
+        max-height: 150px; 
+      }
+      .stats p {
+        flex: 1 1 100%; 
+      }
+    }
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>TikTok Video & Music Downloader</h1>
+    <p>Enter the TikTok video URL below to download:</p>
+    <input type="text" id="tiktokUrl" placeholder="Paste TikTok video URL here" />
+    <button onclick="fetchTikTokData()">Load</button>
+    <div class="error" id="error"></div>
+    <div class="video-container" id="videoContainer">
+      <img id="videoThumbnail" src="" alt="Video Thumbnail">
+      <h3 id="videoTitle"></h3>
+      <a id="downloadVideoLink" href="#" target="_blank">Download Video</a>
+      <a id="downloadAudioLink" href="#" target="_blank" style="display:none;"><button>Download Audio</button></a>
+      <div class="stats">
+        <p>👍 Likes: <span id="likeCount"></span></p>
+        <p>💬 Comments: <span id="commentCount"></span></p>
+        <p>🔄 Shares: <span id="shareCount"></span></p>
+        <p>👀 Views: <span id="playCount"></span></p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    async function fetchTikTokData() {
+      const tiktokUrl = document.getElementById('tiktokUrl').value;
+      const errorDiv = document.getElementById('error');
+      const videoContainer = document.getElementById('videoContainer');
+      const downloadAudioLink = document.getElementById('downloadAudioLink');
+
+      
+      errorDiv.textContent = '';
+      videoContainer.style.display = 'none';
+
+      if (!tiktokUrl) {
+        errorDiv.textContent = 'Please enter a TikTok video URL!';
+        return;
+      }
+
+      try {
+       
+        const proxyUrl = "https://broken-star-6439.abrahamdw882.workers.dev/?u=";
+        const apiUrl = `https://api.giftedtech.my.id/api/download/tiktokdlv1?apikey=gifted&url=${encodeURIComponent(tiktokUrl)}`;
+
+        const response = await fetch(`${proxyUrl}${encodeURIComponent(apiUrl)}`);
+        const data = await response.json();
+
+        if (!data.success) {
+          throw new Error('Failed to fetch video details. Please check the URL or try again later.');
+        }
+
+        
+        const result = data.result;
+        document.getElementById('videoThumbnail').src = result.video.cover;
+        document.getElementById('videoTitle').textContent = result.title;
+        document.getElementById('downloadVideoLink').href = result.video.noWatermark;
+
+        
+        if (result.video.play_url) {
+          downloadAudioLink.style.display = 'inline-block';
+          downloadAudioLink.href = result.video.play_url;
+        } else {
+          downloadAudioLink.style.display = 'none';
+        }
+
+        document.getElementById('likeCount').textContent = result.stats.likeCount;
+        document.getElementById('commentCount').textContent = result.stats.commentCount;
+        document.getElementById('shareCount').textContent = result.stats.shareCount;
+        document.getElementById('playCount').textContent = result.stats.playCount;
+
+        videoContainer.style.display = 'block';
+      } catch (error) {
+        console.error(error);
+        errorDiv.textContent = 'An error occurred: ' + error.message;
+      }
+    }
+  </script>
+</body>
+</html>
