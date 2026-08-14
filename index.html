@@ -3,16 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TikTok Downloader</title>
+    <title>Media Downloader</title>
 </head>
 <body>
 
     <div>
-        <h2>TikTok Video and Music Downloader</h2>
-        <p>Paste any TikTok video URL</p>
+        <h2>Video & Audio Downloader</h2>
+        <p>Paste TikTok or Instagram URL</p>
 
         <div>
-            <input type="text" id="tiktokUrl" placeholder="https://vt.tiktok.com/ZSUMvWufM/" size="50" value="https://vt.tiktok.com/ZSUMvWufM/">
+            <input type="text" id="mediaUrl" placeholder="https://vt.tiktok.com/... or https://www.instagram.com/reel/..." size="50" value="https://vt.tiktok.com/ZSUMvWufM/">
             <button id="fetchBtn">Load</button>
         </div>
 
@@ -42,7 +42,7 @@
                 </p>
             </div>
             <hr>
-            <span>here</span>
+            <span id="sourceLabel">source</span>
         </div>
 
         <hr>
@@ -53,7 +53,7 @@
         (function() {
             "use strict";
 
-            var urlInput = document.getElementById('tiktokUrl');
+            var urlInput = document.getElementById('mediaUrl');
             var fetchBtn = document.getElementById('fetchBtn');
             var statusMsg = document.getElementById('statusMessage');
 
@@ -66,6 +66,7 @@
             var commentSpan = document.getElementById('commentCount');
             var shareSpan = document.getElementById('shareCount');
             var playSpan = document.getElementById('playCount');
+            var sourceLabel = document.getElementById('sourceLabel');
 
             function setStatus(text) {
                 statusMsg.textContent = text;
@@ -81,13 +82,14 @@
                 commentSpan.textContent = '-';
                 shareSpan.textContent = '-';
                 playSpan.textContent = '-';
+                sourceLabel.textContent = '';
             }
 
-            function showResult(data) {
-                var videoUrl = data.mp4 || data.mp4_hd || '';
-                var audioUrl = data.mp3 || '';
-                var thumb = data.thumbnail || '';
-                var title = data.title || 'TikTok video';
+            function showResult(data, platform) {
+                var videoUrl = data.mp4 || data.mp4_hd || data.video || '';
+                var audioUrl = data.mp3 || data.audio || '';
+                var thumb = data.thumbnail || data.cover || '';
+                var title = data.title || data.desc || 'Media';
 
                 if (!videoUrl) {
                     setStatus('No video URL in response');
@@ -109,36 +111,49 @@
                     downloadAudio.style.display = 'none';
                 }
 
-                var likes = data.likeCount || data.diggCount || data.stats?.diggCount || '-';
-                var comments = data.commentCount || data.stats?.commentCount || '-';
-                var shares = data.shareCount || data.stats?.shareCount || '-';
-                var plays = data.playCount || data.stats?.playCount || data.views || '-';
+                var likes = data.likeCount || data.diggCount || data.stats?.diggCount || data.likes || '-';
+                var comments = data.commentCount || data.stats?.commentCount || data.comments || '-';
+                var shares = data.shareCount || data.stats?.shareCount || data.shares || '-';
+                var plays = data.playCount || data.stats?.playCount || data.views || data.viewCount || '-';
 
                 likeSpan.textContent = likes;
                 commentSpan.textContent = comments;
                 shareSpan.textContent = shares;
                 playSpan.textContent = plays;
 
+                sourceLabel.textContent = platform || 'unknown';
                 resultContainer.style.display = 'block';
                 setStatus('loaded successfully');
             }
 
-            async function fetchTikTokData() {
+            async function fetchMedia() {
                 var rawUrl = urlInput.value.trim();
                 if (!rawUrl) {
-                    setStatus('Please paste a TikTok URL');
+                    setStatus('Please paste a URL');
                     clearResult();
                     return;
                 }
 
-                if (!rawUrl.includes('tiktok.com') && !rawUrl.includes('vt.tiktok')) {
-                    setStatus('Invalid TikTok URL');
+                var isTikTok = rawUrl.includes('tiktok.com') || rawUrl.includes('vt.tiktok');
+                var isInstagram = rawUrl.includes('instagram.com') || rawUrl.includes('instagr.am');
+
+                if (!isTikTok && !isInstagram) {
+                    setStatus('Only TikTok or Instagram links supported');
                     clearResult();
                     return;
                 }
 
                 var encoded = encodeURIComponent(rawUrl);
-                var apiEndpoint = 'https://eliteprotech-apis.zone.id/tiktok?url=' + encoded;
+                var apiEndpoint = '';
+                var platform = '';
+
+                if (isTikTok) {
+                    apiEndpoint = 'https://eliteprotech-apis.zone.id/tiktok?url=' + encoded;
+                    platform = 'TikTok';
+                } else if (isInstagram) {
+                    apiEndpoint = 'https://eliteprotech-apis.zone.id/instagram?url=' + encoded;
+                    platform = 'Instagram';
+                }
 
                 fetchBtn.disabled = true;
                 setStatus('fetching ...');
@@ -161,11 +176,42 @@
                         throw new Error(data.message || 'API returned error');
                     }
 
-                    if (!data.mp4 && !data.mp4_hd) {
+                    var mediaData = data;
+                    if (platform === 'Instagram' && data.data) {
+                        mediaData = data.data;
+                    } else if (platform === 'Instagram' && data.graphql?.shortcode_media) {
+                        var node = data.graphql.shortcode_media;
+                        mediaData = {
+                            mp4: node.video_url || node.videoUrl || '',
+                            thumbnail: node.thumbnail_src || node.display_url || '',
+                            title: node.edge_media_to_caption?.edges?.[0]?.node?.text || 'Instagram reel',
+                            likeCount: node.edge_media_preview_like?.count || node.like_count || 0,
+                            commentCount: node.edge_media_to_comment?.count || node.comment_count || 0,
+                            playCount: node.video_view_count || node.play_count || 0,
+                            shareCount: node.edge_media_to_share?.count || node.share_count || 0,
+                        };
+                    }
+
+                    if (!mediaData.mp4 && data.mp4) mediaData.mp4 = data.mp4;
+                    if (!mediaData.mp4 && data.mp4_hd) mediaData.mp4 = data.mp4_hd;
+                    if (!mediaData.thumbnail && data.thumbnail) mediaData.thumbnail = data.thumbnail;
+
+                    if (!mediaData.mp4 && !mediaData.video) {
                         throw new Error('No video media found');
                     }
 
-                    showResult(data);
+                    var normalized = {
+                        mp4: mediaData.mp4 || mediaData.video || mediaData.video_url || '',
+                        mp3: mediaData.mp3 || mediaData.audio || mediaData.music || '',
+                        thumbnail: mediaData.thumbnail || mediaData.cover || mediaData.thumb || '',
+                        title: mediaData.title || mediaData.desc || mediaData.caption || 'Media',
+                        likeCount: mediaData.likeCount ?? mediaData.diggCount ?? mediaData.like_count ?? mediaData.likes ?? 0,
+                        commentCount: mediaData.commentCount ?? mediaData.comment_count ?? mediaData.comments ?? 0,
+                        shareCount: mediaData.shareCount ?? mediaData.share_count ?? mediaData.shares ?? 0,
+                        playCount: mediaData.playCount ?? mediaData.play_count ?? mediaData.views ?? mediaData.viewCount ?? 0,
+                    };
+
+                    showResult(normalized, platform);
                 } catch (err) {
                     console.error('Fetch error:', err);
                     setStatus('Error: ' + (err.message || 'Request failed'));
@@ -175,8 +221,7 @@
                 }
             }
 
-            fetchBtn.addEventListener('click', fetchTikTokData);
-
+            fetchBtn.addEventListener('click', fetchMedia);
             urlInput.addEventListener('keydown', function(e) {
                 if (e.key === 'Enter') {
                     e.preventDefault();
