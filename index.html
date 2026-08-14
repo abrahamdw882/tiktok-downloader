@@ -1,269 +1,190 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
- <link rel="icon" type="image/x-icon"
-        href="https://i.ibb.co/VVdrZLm/502d5d69-6535-4092-be10-cb1b81514b46.jpg" />
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-	 <meta property="og:locale" content="en_US" />
-    <meta property="og:type" content="website" />
-    <meta property="og:site_name" content=" BY AB-TECH" />
-    <meta name="keywords"
-        content="Devi,programming,Ethical,Anime Fan" />
-  
-    <meta itemprop="image" content="https://i.ibb.co/2hCCckS/f6e1299b-64ff-49d6-8d5c-03d789f6b087.jpg" />
-    <meta property="og:image" content="https://i.ibb.co/2hCCckS/f6e1299b-64ff-49d6-8d5c-03d789f6b087.jpg" />
-    <meta property="og:image:secure_url"
-        content="https://i.ibb.co/2hCCckS/f6e1299b-64ff-49d6-8d5c-03d789f6b087.jpg" />
-    <meta property="og:image:width" content="650" />
-    <meta property="og:image:height" content="350" />
-  <title>TikTok Video & Music Downloader</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: linear-gradient(135deg, #6a11cb 0%, #2575fc 50%, #00d4ff 100%);
-      margin: 0;
-      padding: 0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: flex-start; 
-      height: 100vh;
-      color: #333;
-    }
-    .container {
-      background:linear-gradient(135deg, #6a11cb 0%, #2575fc 50%, #00d4ff 100%);;
-      color: #333;
-      max-width: 600px;
-      width: 100%;
-      padding: 20px;
-      border-radius: 12px;
-      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-      text-align: center;
-      animation: fadeIn 0.6s ease-out;
-      margin-top: 20px; 
-    }
-    h1 {
-      font-size: 1.8rem;
-      margin-bottom: 15px;
-      color: #000;
-    }
-    p {
-      font-size: 16px;
-      margin-bottom: 20px;
-      color: #f5f5f5;
-    }
-    #tiktokUrl {
-      width: 80%;
-      max-width: 400px;
-      padding: 8px;
-      border: 2px solid #4a4a8f;
-      border-radius: 5px;
-      outline: none;
-      font-size: 14px;
-      margin-bottom: 15px;
-    }
-    #tiktokUrl:focus {
-      border-color: #4a8feb;
-    }
-    button {
-      background: #0010cb;
-      color: white;
-      border: none;
-      padding: 8px 16px;
-      font-size: 14px;
-      border-radius: 5px;
-      cursor: pointer;
-      transition: background 0.3s ease;
-    }
-    button:hover {
-      background: #367bd6;
-    }
-    button:disabled {
-      background: #a7c1eb;
-      cursor: not-allowed;
-    }
-    .loading {
-      display: none;
-      font-size: 16px;
-      color: #1e3c72;
-      margin-top: 10px;
-    }
-    .error {
-      color: red;
-      font-size: 14px;
-      margin-top: 10px;
-    }
-    .video-container {
-      margin-top: 20px;
-      display: none;
-    }
-    .video-container img {
-      width: 100%;
-      max-width: 300px;
-      max-height: 200px;
-      object-fit: cover;
-      border-radius: 8px;
-      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
-      margin-bottom: 15px;
-    }
-    .video-container h3 {
-      font-size: 20px;
-      margin-bottom: 10px;
-      color: #1e3c72;
-      word-wrap: break-word;
-    }
-    .video-container a,
-    .video-container button {
-      display: inline-block;
-      text-decoration: none;
-      color: #fff;
-      background: #1e3c72;
-      padding: 10px 15px;
-      border-radius: 8px;
-      margin-top: 10px;
-      font-size: 14px;
-      transition: background 0.3s, transform 0.2s;
-    }
-    .video-container a:hover,
-    .video-container button:hover {
-      background: #2a5298;
-      transform: scale(1.05);
-    }
-    .video-container button {
-      border: none;
-      cursor: pointer;
-    }
-    .stats {
-      margin-top: 20px;
-      display: flex;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      color: #555;
-    }
-    .stats p {
-      flex: 1 1 48%;
-      margin-bottom: 10px;
-      font-size: 14px;
-    }
-    @media (max-width: 768px) {
-      .container {
-        padding: 15px;
-        max-width: 90%;
-      }
-      h1 {
-        font-size: 1.5rem;
-      }
-      #tiktokUrl {
-        font-size: 12px;
-        padding: 6px;
-      }
-      button {
-        font-size: 12px;
-        padding: 6px 12px;
-      }
-      .video-container img {
-        max-width: 100%;
-        max-height: 150px;
-      }
-      .stats p {
-        flex: 1 1 100%;
-      }
-    }
-    @keyframes fadeIn {
-      from {
-        opacity: 0;
-        transform: translateY(10px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-    
-   @media (max-width: 768px) {
-      .container {
-        padding: 15px;
-        max-width: 90%;
-      }
-      h1 {
-        font-size: 1.5rem;
-      }
-      #tiktokUrl {
-        font-size: 12px;
-        padding: 6px;
-      }
-      button {
-        font-size: 12px;
-        padding: 6px 12px;
-      }
-      .video-container img {
-        max-width: 100%;
-        max-height: 150px;
-      }
-      .stats p {
-        flex: 1 1 100%;
-      }
-    }
-    @keyframes fadeIn {
-      from {
-        opacity: 0;
-        transform: translateY(10px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-    @media (max-width: 600px) {
-      .video-container a,
-      .video-container button {
-        display: block;
-        width: 90%;
-        max-width: 300px;
-        margin: 10px auto;
-      }
-    }
-    @media (max-width: 600px) {
-      .container {
-        padding-top: 20px;
-      }
-      h1 {
-        margin-top: 0;
-        position: relative;
-        top: 0;
-      }
-      .video-container {
-        display: block;
-        width: 100%;
-      }
-    }
-  </style>
+    <title>TikTok Downloader</title>
 </head>
 <body>
-  <div class="container">
-    <h1>TikTok Video & Music Downloader</h1>
-    <p>Enter the TikTok video URL below to download:</p>
-    <input type="text" id="tiktokUrl" placeholder="Paste the TikTok URL here then click load" />
-    <button onclick="fetchTikTokData()">Load</button>
-    <div class="loading" id="loading">Loading✨...</div>
-    <div class="error" id="error"></div>
-    <div class="video-container" id="videoContainer">
-      <img id="videoThumbnail" src="" alt="Video Thumbnail">
-      <h3 id="videoTitle"></h3>
-      <a id="downloadVideoLink" href="#" target="_blank">Download Video</a>
-      <a id="downloadAudioLink" href="#" target="_blank" style="display:none;">Download Audio</a>
-      <div class="stats">
-        <p>👍 Likes: <span id="likeCount"></span></p>
-        <p>💬 Comments: <span id="commentCount"></span></p>
-        <p>🔄 Shares: <span id="shareCount"></span></p>
-        <p>👀 Views: <span id="playCount"></span></p>
-      </div>
-    </div>
-  </div>
 
-  <script src="ab-tiktok.js">
-   
-  </script>
+    <div>
+        <h2>TikTok Video and Music Downloader</h2>
+        <p>Paste any TikTok video URL</p>
+
+        <div>
+            <input type="text" id="tiktokUrl" placeholder="https://vt.tiktok.com/ZSUMvWufM/" size="50" value="https://vt.tiktok.com/ZSUMvWufM/">
+            <button id="fetchBtn">Load</button>
+        </div>
+
+        <div id="statusArea">
+            <span id="statusMessage">paste URL and click Load</span>
+        </div>
+
+        <div id="resultContainer" style="display: none;">
+            <hr>
+            <div>
+                <img id="videoThumb" src="" alt="thumbnail" style="max-width:320px; max-height:240px;">
+                <h3 id="videoTitle">title</h3>
+            </div>
+
+            <div>
+                <a id="downloadVideo" href="#" target="_blank">Download Video (MP4)</a>
+                <span> | </span>
+                <a id="downloadAudio" href="#" target="_blank">Download Audio (MP3)</a>
+            </div>
+
+            <div>
+                <p>
+                    Likes: <span id="likeCount">-</span> &nbsp;|&nbsp;
+                    Comments: <span id="commentCount">-</span> &nbsp;|&nbsp;
+                    Shares: <span id="shareCount">-</span> &nbsp;|&nbsp;
+                    Views: <span id="playCount">-</span>
+                </p>
+            </div>
+            <hr>
+            <span>data from API</span>
+        </div>
+
+        <hr>
+        <small>pure HTML and JavaScript</small>
+    </div>
+
+    <script>
+        (function() {
+            "use strict";
+
+            var urlInput = document.getElementById('tiktokUrl');
+            var fetchBtn = document.getElementById('fetchBtn');
+            var statusMsg = document.getElementById('statusMessage');
+
+            var resultContainer = document.getElementById('resultContainer');
+            var videoThumb = document.getElementById('videoThumb');
+            var videoTitle = document.getElementById('videoTitle');
+            var downloadVideo = document.getElementById('downloadVideo');
+            var downloadAudio = document.getElementById('downloadAudio');
+            var likeSpan = document.getElementById('likeCount');
+            var commentSpan = document.getElementById('commentCount');
+            var shareSpan = document.getElementById('shareCount');
+            var playSpan = document.getElementById('playCount');
+
+            function setStatus(text) {
+                statusMsg.textContent = text;
+            }
+
+            function clearResult() {
+                resultContainer.style.display = 'none';
+                videoThumb.src = '';
+                videoTitle.textContent = '';
+                downloadVideo.href = '#';
+                downloadAudio.href = '#';
+                likeSpan.textContent = '-';
+                commentSpan.textContent = '-';
+                shareSpan.textContent = '-';
+                playSpan.textContent = '-';
+            }
+
+            function showResult(data) {
+                var videoUrl = data.mp4 || data.mp4_hd || '';
+                var audioUrl = data.mp3 || '';
+                var thumb = data.thumbnail || '';
+                var title = data.title || 'TikTok video';
+
+                if (!videoUrl) {
+                    setStatus('No video URL in response');
+                    clearResult();
+                    return;
+                }
+
+                videoThumb.src = thumb;
+                videoThumb.alt = title;
+                videoTitle.textContent = title;
+
+                downloadVideo.href = videoUrl;
+                downloadVideo.download = '';
+
+                if (audioUrl) {
+                    downloadAudio.href = audioUrl;
+                    downloadAudio.style.display = 'inline';
+                } else {
+                    downloadAudio.style.display = 'none';
+                }
+
+                var likes = data.likeCount || data.diggCount || data.stats?.diggCount || '-';
+                var comments = data.commentCount || data.stats?.commentCount || '-';
+                var shares = data.shareCount || data.stats?.shareCount || '-';
+                var plays = data.playCount || data.stats?.playCount || data.views || '-';
+
+                likeSpan.textContent = likes;
+                commentSpan.textContent = comments;
+                shareSpan.textContent = shares;
+                playSpan.textContent = plays;
+
+                resultContainer.style.display = 'block';
+                setStatus('loaded successfully');
+            }
+
+            async function fetchTikTokData() {
+                var rawUrl = urlInput.value.trim();
+                if (!rawUrl) {
+                    setStatus('Please paste a TikTok URL');
+                    clearResult();
+                    return;
+                }
+
+                if (!rawUrl.includes('tiktok.com') && !rawUrl.includes('vt.tiktok')) {
+                    setStatus('Invalid TikTok URL');
+                    clearResult();
+                    return;
+                }
+
+                var encoded = encodeURIComponent(rawUrl);
+                var apiEndpoint = 'https://eliteprotech-apis.zone.id/tiktok?url=' + encoded;
+
+                fetchBtn.disabled = true;
+                setStatus('fetching ...');
+                clearResult();
+
+                try {
+                    var response = await fetch(apiEndpoint);
+                    if (!response.ok) {
+                        var errText = 'HTTP ' + response.status;
+                        try {
+                            var errJson = await response.json();
+                            errText = errJson.message || errJson.error || errText;
+                        } catch (_) {}
+                        throw new Error('Server error: ' + errText);
+                    }
+
+                    var data = await response.json();
+
+                    if (data.success === false) {
+                        throw new Error(data.message || 'API returned error');
+                    }
+
+                    if (!data.mp4 && !data.mp4_hd) {
+                        throw new Error('No video media found');
+                    }
+
+                    showResult(data);
+                } catch (err) {
+                    console.error('Fetch error:', err);
+                    setStatus('Error: ' + (err.message || 'Request failed'));
+                    clearResult();
+                } finally {
+                    fetchBtn.disabled = false;
+                }
+            }
+
+            fetchBtn.addEventListener('click', fetchTikTokData);
+
+            urlInput.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    fetchBtn.click();
+                }
+            });
+        })();
+    </script>
+
 </body>
-</html>
+	</html>
